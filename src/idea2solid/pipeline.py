@@ -1,13 +1,18 @@
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 import tempfile
+import uuid
 from importlib import import_module
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, TypedDict
 
 from .vector_store import SnippetVectorStore
+
+
+DEFAULT_MODEL = os.getenv("IDEA2SOLID_MODEL", "gpt-4o-mini")
 
 
 class GenerationState(TypedDict, total=False):
@@ -20,6 +25,8 @@ class GenerationState(TypedDict, total=False):
     code: str
     validation: Dict[str, Any]
     errors: List[str]
+    export: Dict[str, Any]
+    stl_path: str
 
 
 def _lazy_import(module_path: str, attr: str) -> Any:
@@ -131,7 +138,7 @@ def _synthesize(
             human_message(content=prompt),
         ]
     )
-    code = getattr(response, "content", "")
+    code = _normalize_code(getattr(response, "content", ""))
     errors = _apply_guardrails(code)
     return {"prompt": prompt, "code": code, "errors": errors}
 
@@ -152,14 +159,9 @@ def _validate(
         handle_path = Path(handle.name)
 
     try:
-        result = subprocess.run(
-            [openscad_path, "--check", str(handle_path)],
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+        result = _run_openscad_check(openscad_path, handle_path)
     except FileNotFoundError:
-        errors.append("OpenSCAD CLI not found. Install it or set OPENCAD_PATH.")
+        errors.append("OpenSCAD CLI not found. Install it or set OPENSCAD_PATH.")
         validation = {"status": "missing", "stderr": ""}
     else:
         validation = {
@@ -175,15 +177,111 @@ def _validate(
     return {"validation": validation, "errors": errors}
 
 
+def _export(
+    state: GenerationState,
+    *,
+    openscad_path: str,
+    output_dir: Optional[str | Path],
+) -> GenerationState:
+    errors = list(state.get("errors", []))
+    validation = state.get("validation", {}) or {}
+    status = validation.get("status")
+    if status != "passed":
+        errors.append("STL export skipped because validation did not pass.")
+        return {"errors": errors}
+
+    code = state.get("code", "")
+    if not code.strip():
+        errors.append("No OpenSCAD code available for STL export.")
+        return {"errors": errors}
+
+    export_dir = Path(output_dir) if output_dir else Path("outputs")
+    export_dir.mkdir(parents=True, exist_ok=True)
+
+    with tempfile.NamedTemporaryFile("w", suffix=".scad", delete=False) as handle:
+        handle.write(code)
+        scad_path = Path(handle.name)
+
+    stl_filename = f"idea2solid_{uuid.uuid4().hex}.stl"
+    stl_path = export_dir / stl_filename
+
+    try:
+        result = subprocess.run(
+            [openscad_path, "-o", str(stl_path), str(scad_path)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+    except FileNotFoundError:
+        errors.append("OpenSCAD CLI not found during export. Install it or set OPENSCAD_PATH.")
+        export_info = {"status": "missing", "stderr": ""}
+        stl_path.unlink(missing_ok=True)
+        scad_path.unlink(missing_ok=True)
+        return {"errors": errors, "export": export_info}
+
+    scad_path.unlink(missing_ok=True)
+
+    export_info = {
+        "status": "success" if result.returncode == 0 else "failed",
+        "stdout": result.stdout.strip(),
+        "stderr": result.stderr.strip(),
+    }
+
+    if result.returncode != 0:
+        errors.append("OpenSCAD export failed; check stderr for details.")
+        stl_path.unlink(missing_ok=True)
+        return {"errors": errors, "export": export_info}
+
+    return {
+        "export": export_info,
+        "stl_path": str(stl_path),
+        "errors": errors,
+    }
+
+
+def _run_openscad_check(openscad_path: str, scad_path: Path) -> subprocess.CompletedProcess[str]:
+    """Attempt to validate generated code, falling back when --check is ambiguous."""
+
+    result = subprocess.run(
+        [openscad_path, "--check", str(scad_path)],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    stderr = result.stderr or ""
+    if result.returncode == 0 or "option '--check' is ambiguous" not in stderr:
+        return result
+
+    with tempfile.NamedTemporaryFile("w", suffix=".stl", delete=False) as tmp:
+        stl_path = Path(tmp.name)
+
+    try:
+        fallback = subprocess.run(
+            [openscad_path, "-o", str(stl_path), str(scad_path)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+    finally:
+        stl_path.unlink(missing_ok=True)
+
+    if fallback.returncode != 0 and not fallback.stderr:
+        fallback.stderr = stderr  # type: ignore[assignment]
+
+    return fallback
+
+
 def build_generation_pipeline(
     vector_store: SnippetVectorStore,
     *,
     top_k: int = 5,
-    model: str = "gpt-5-codex-preview",
+    model: str = DEFAULT_MODEL,
     temperature: float = 0.2,
     openscad_path: str = "openscad",
+    output_dir: Optional[str | Path] = None,
 ) -> Any:
-    """Create a LangGraph pipeline: ingest -> retrieve -> synthesize -> validate."""
+    """Create a LangGraph pipeline: ingest -> retrieve -> synthesize -> validate -> export."""
 
     state_graph_cls, end_token = _get_langgraph_primitives()
 
@@ -201,12 +299,21 @@ def build_generation_pipeline(
         "validate",
         lambda state: _validate(state, openscad_path=openscad_path),
     )
+    graph.add_node(
+        "export",
+        lambda state: _export(
+            state,
+            openscad_path=openscad_path,
+            output_dir=output_dir,
+        ),
+    )
 
     graph.set_entry_point("ingest")
     graph.add_edge("ingest", "retrieve")
     graph.add_edge("retrieve", "synthesize")
     graph.add_edge("synthesize", "validate")
-    graph.add_edge("validate", end_token)
+    graph.add_edge("validate", "export")
+    graph.add_edge("export", end_token)
 
     compiled = graph.compile()
     compiled.config = {  # type: ignore[attr-defined]
@@ -214,6 +321,7 @@ def build_generation_pipeline(
         "model": model,
         "temperature": temperature,
         "openscad_path": openscad_path,
+        "output_dir": str(output_dir) if output_dir else None,
     }
     return compiled
 
@@ -223,6 +331,15 @@ def _extract_code(page_content: str) -> str:
     if marker in page_content:
         return page_content.split(marker, maxsplit=1)[1]
     return page_content
+
+
+def _normalize_code(code: str) -> str:
+    """Strip markdown fences and extraneous whitespace from model output."""
+
+    fence_match = re.search(r"```(?:[a-zA-Z0-9_+-]*)?\n([\s\S]*?)```", code)
+    if fence_match:
+        code = fence_match.group(1)
+    return code.strip()
 
 
 def _get_langgraph_primitives():

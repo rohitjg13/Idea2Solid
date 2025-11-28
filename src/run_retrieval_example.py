@@ -1,5 +1,3 @@
-"""Example script demonstrating snippet retrieval workflow."""
-
 from __future__ import annotations
 
 import os
