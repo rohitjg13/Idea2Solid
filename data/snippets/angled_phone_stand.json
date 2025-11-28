@@ -1,0 +1,15 @@
+{
+  "id": "angled_phone_stand",
+  "title": "Angled Phone Stand",
+  "summary": "Compact stand with tilted back plate, lip, and rear support brace for smartphones.",
+  "parameters": {
+    "base_width": "Width of the base platform; determines device width accommodation.",
+    "base_depth": "Depth of the base platform along the viewing axis.",
+    "back_height": "Height of the angled support panel.",
+    "tilt_angle": "Back panel tilt in degrees from vertical.",
+    "panel_thickness": "Thickness of the printed panels.",
+    "lip_height": "Front lip height that prevents the phone from sliding forward."
+  },
+  "tags": ["stand", "desk", "phone"],
+  "notes": "Shows use of rotations and braces to form a stable support structure."
+}

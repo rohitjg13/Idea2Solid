@@ -1,0 +1,14 @@
+{
+  "id": "parametric_box",
+  "title": "Parametric Storage Box",
+  "summary": "Rectangular storage box with configurable wall thickness and optional lip for a slide-on lid.",
+  "parameters": {
+    "outer_length": "Overall box length in millimeters.",
+    "outer_width": "Overall box width in millimeters.",
+    "outer_height": "Overall box height in millimeters.",
+    "wall_thickness": "Shell thickness; affects interior cavity size.",
+    "lip_height": "Height of the upper rim that helps retain a lid."
+  },
+  "tags": ["container", "storage", "rectangular"],
+  "notes": "Demonstrates simple difference modeling with configurable shell and lid retention lip."
+}

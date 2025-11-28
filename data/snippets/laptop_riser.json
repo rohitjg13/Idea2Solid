@@ -1,0 +1,15 @@
+{
+  "id": "laptop_riser",
+  "title": "Laptop Riser",
+  "summary": "Ventilated laptop stand with angled deck and reinforcing ribs.",
+  "parameters": {
+    "base_width": "Overall width of the stand.",
+    "base_depth": "Depth of the footprint.",
+    "rise_height": "Vertical elevation at the back edge.",
+    "panel_thickness": "Thickness of the top deck.",
+    "vent_count": "Number of rectangular vent slots.",
+    "rib_thickness": "Thickness of the supporting ribs beneath the deck." 
+  },
+  "tags": ["stand", "laptop", "ergonomics"],
+  "notes": "Captures angled surfaces, cutouts, and structural ribs within a single model."
+}

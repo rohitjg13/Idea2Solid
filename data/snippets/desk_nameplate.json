@@ -1,0 +1,16 @@
+{
+  "id": "desk_nameplate",
+  "title": "Desk Nameplate",
+  "summary": "Slanted nameplate with embossed text on a rectangular base.",
+  "parameters": {
+    "plate_width": "Overall width of the base along the X axis.",
+    "plate_depth": "Depth of the base footprint.",
+    "plate_height": "Back edge height of the slanted face.",
+    "text_string": "Text to emboss on the face.",
+    "font_size": "Font size used for the text primitive.",
+    "text_depth": "Extrusion depth of the embossed lettering.",
+    "tilt_angle": "Angle between the face and the build surface."
+  },
+  "tags": ["desk", "signage", "text"],
+  "notes": "Illustrates linear extrude and projection of text onto an angled surface."
+}

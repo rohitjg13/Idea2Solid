@@ -1,0 +1,15 @@
+{
+  "id": "hex_storage_bin",
+  "title": "Hexagonal Storage Bin",
+  "summary": "Stackable hexagonal container with configurable wall and floor thickness.",
+  "parameters": {
+    "side_length": "Distance from center to each hexagon vertex.",
+    "wall_thickness": "Thickness of the shell walls.",
+    "height": "Overall height of the container.",
+    "floor_thickness": "Thickness of the bottom floor.",
+    "lip_height": "Height of the nesting lip for stacking.",
+    "lip_offset": "Amount the lip overhangs the outer wall." 
+  },
+  "tags": ["storage", "hexagon", "container"],
+  "notes": "Uses 2D difference and linear extrusion to produce a parametric polygonal volume."
+}

@@ -1,0 +1,15 @@
+{
+  "id": "wall_hook",
+  "title": "Wall Hook",
+  "summary": "Rounded wall hook with mounting plate and countersunk screw holes.",
+  "parameters": {
+    "base_width": "Width of the rectangular wall plate.",
+    "base_height": "Height of the wall plate.",
+    "base_thickness": "Thickness of the wall plate and hook arm.",
+    "hook_radius": "Radius of the curved hook end.",
+    "hook_thickness": "Cross-sectional thickness of the hook arm.",
+    "screw_hole_diameter": "Diameter of the through holes for mounting screws."
+  },
+  "tags": ["hook", "organization", "wall"],
+  "notes": "Combines hull operations to blend a curved hook into a mounting plate."
+}

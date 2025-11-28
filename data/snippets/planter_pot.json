@@ -1,0 +1,15 @@
+{
+  "id": "planter_pot",
+  "title": "Planter Pot",
+  "summary": "Tapered cylindrical planter with drainage and interior fillet.",
+  "parameters": {
+    "outer_diameter": "Diameter at the top outer edge.",
+    "inner_diameter": "Interior diameter at the top opening.",
+    "height": "Overall height of the planter.",
+    "base_thickness": "Thickness of the bottom floor.",
+    "drain_hole_diameter": "Diameter of the drainage hole.",
+    "rim_thickness": "Extra thickness at the lip for rigidity." 
+  },
+  "tags": ["planter", "home", "container"],
+  "notes": "Uses scale transforms to achieve taper and difference for the drainage hole."
+}

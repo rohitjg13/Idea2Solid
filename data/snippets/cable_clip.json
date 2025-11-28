@@ -1,0 +1,15 @@
+{
+  "id": "cable_clip",
+  "title": "Desk Cable Clip",
+  "summary": "Adhesive-friendly clip with circular channel and press-fit opening for routing cables.",
+  "parameters": {
+    "clip_width": "Overall printable width of the clip body.",
+    "clip_depth": "Distance from wall to opening; controls adhesive pad size.",
+    "clip_height": "Height of the clip including mounting pad.",
+    "slot_diameter": "Diameter of the cable channel.",
+    "gap_width": "Width of the squeeze gap for inserting the cable.",
+    "base_thickness": "Thickness of the adhesive pad backing." 
+  },
+  "tags": ["cable", "organizer", "desk"],
+  "notes": "Combination of cylinder subtraction and chamfered slot illustrates constructive solid geometry usage."
+}

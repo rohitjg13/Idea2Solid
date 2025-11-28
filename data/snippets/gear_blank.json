@@ -1,0 +1,15 @@
+{
+  "id": "gear_blank",
+  "title": "Spur Gear Blank",
+  "summary": "Approximate involute spur gear using mirrored tooth profiles built from rectangles and arcs.",
+  "parameters": {
+    "tooth_count": "Number of teeth along the pitch circle.",
+    "module_size": "Metric module; controls tooth size and pitch diameter.",
+    "thickness": "Gear thickness along the Z axis.",
+    "bore_diameter": "Diameter of the center shaft hole.",
+    "hole_count": "Number of weight reduction holes placed around the hub.",
+    "hole_diameter": "Diameter of each weight reduction hole."
+  },
+  "tags": ["mechanical", "gear", "parametric"],
+  "notes": "Provides a practical polygon-based tooth approximation without external libraries."
+}

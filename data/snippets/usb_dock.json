@@ -1,0 +1,17 @@
+{
+  "id": "usb_dock",
+  "title": "USB Cable Dock",
+  "summary": "Desk organizer block with multiple vertical channels for USB cables or pens.",
+  "parameters": {
+    "slot_count": "Number of vertical channels.",
+    "slot_width": "Width of each slot opening.",
+    "slot_depth": "Front-to-back depth of each channel.",
+    "slot_spacing": "Spacing between slot centers.",
+    "base_length": "Total length of the organizer base.",
+    "base_width": "Width of the base block.",
+    "base_height": "Height of the organizer block.",
+    "corner_radius": "Radius applied to vertical edges via minkowski rounding." 
+  },
+  "tags": ["organizer", "desk", "usb"],
+  "notes": "Demonstrates arrayed cutouts and basic filleting using minkowski sums."
+}
