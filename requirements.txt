@@ -1,0 +1,6 @@
+langchain>=0.2.12
+langchain-openai>=0.1.14
+langchain-community>=0.2.11
+langgraph>=0.2.18
+faiss-cpu>=1.8.0.post1
+python-dotenv>=1.0.0

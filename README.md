@@ -12,8 +12,8 @@ The project showcases every major concept from MAT496. It relies on prompt engin
 
 I plan to execute these steps to complete my project.
 
-- [x] Curate 10-15 high-quality OpenSCAD exemplars with metadata, descriptions, and parameter notes stored in `data/snippets`.
-- [ ] Embed the exemplars, stand up a vector store (FAISS or Chroma), and expose retrieval nodes inside a LangGraph workflow.
+- [X] Curate 10-15 high-quality OpenSCAD exemplars with metadata, descriptions, and parameter notes stored in `data/snippets`.
+- [X] Embed the exemplars, stand up a vector store (FAISS or Chroma), and expose retrieval nodes inside a LangGraph workflow.
 - [ ] Design the LangGraph pipeline: user prompt ingestion, retrieval, GPT synthesis with guardrails, code linting via `openscad --check`, and error handling.
 - [ ] Automate STL generation by invoking OpenSCAD headlessly and returning file handles through the graph.
 - [ ] Instrument the graph with LangSmith traces and add regression prompts to validate geometry consistency.
