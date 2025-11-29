@@ -17,4 +17,4 @@ I plan to execute these steps to complete my project.
 - [X] Design the LangGraph pipeline: user prompt ingestion, retrieval, GPT synthesis with guardrails, code linting via `openscad --check`, and error handling.
 - [X] Automate STL generation by invoking OpenSCAD headlessly and returning file handles through the graph.
 - [X] Instrument the graph with LangSmith traces and add regression prompts to validate geometry consistency.
-- [ ] Package the solution with a lightweight CLI or Streamlit front end that collects prompts and serves STL downloads.
+- [X] Package the solution with a frontend (FastAPI + Svelte) for interactive use.
