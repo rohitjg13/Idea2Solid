@@ -1,11 +1,12 @@
 <script>
-  import { onMount, onDestroy } from "svelte";
+  import { onMount, onDestroy, createEventDispatcher } from "svelte";
   import * as THREE from "three";
   import { STLLoader } from "three/examples/jsm/loaders/STLLoader.js";
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
   export let url;
 
+  const dispatch = createEventDispatcher();
   let container;
   let renderer, scene, camera, controls, animationId;
 
@@ -27,7 +28,7 @@
     const height = container.clientHeight;
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0f172a); // Match app background or slightly lighter
+    scene.background = new THREE.Color(0x000000); // Pitch black
 
     // Lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
@@ -60,7 +61,7 @@
     controls.autoRotateSpeed = 2.0;
 
     // Grid
-    const gridHelper = new THREE.GridHelper(200, 20, 0x444444, 0x222222);
+    const gridHelper = new THREE.GridHelper(200, 20, 0xffffff, 0x333333);
     scene.add(gridHelper);
     
     // Axes
@@ -76,7 +77,7 @@
       stlUrl,
       (geometry) => {
         const material = new THREE.MeshPhongMaterial({
-          color: 0x38bdf8,
+          color: 0xffffff,
           specular: 0x111111,
           shininess: 200,
         });
@@ -90,6 +91,13 @@
         const box = geometry.boundingBox;
         const size = new THREE.Vector3();
         box.getSize(size);
+
+        dispatch('dimensions', {
+          x: size.x,
+          y: size.y,
+          z: size.z
+        });
+
         const maxDim = Math.max(size.x, size.y, size.z);
         const fov = camera.fov * (Math.PI / 180);
         let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
@@ -138,7 +146,7 @@
     height: 100%;
     min-height: 400px;
     background: #000;
-    border-radius: 12px;
+    border-radius: 0;
     overflow: hidden;
   }
 </style>

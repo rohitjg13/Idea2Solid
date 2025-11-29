@@ -8,11 +8,17 @@
   let error = null;
   let result = null;
   let showDetails = false;
+  let modelDimensions = null;
 
   function reset() {
     error = null;
     result = null;
     showDetails = false;
+    modelDimensions = null;
+  }
+
+  function handleDimensions(event) {
+    modelDimensions = event.detail;
   }
 
   async function submitPrompt() {
@@ -61,31 +67,31 @@
 <main class="layout">
   <section class="panel input-panel">
     <header>
-      <h1>Idea2Solid</h1>
-      <p class="tagline">Prompt-driven OpenSCAD generation.</p>
+      <h1>IDEA2SOLID</h1>
+      <p class="tagline">PROMPT-DRIVEN OPENSCAD GENERATION</p>
     </header>
 
     <div class="form-group">
-      <label for="prompt">Describe your object</label>
+      <label for="prompt">DESCRIBE YOUR OBJECT</label>
       <textarea
         id="prompt"
         bind:value={prompt}
-        placeholder="e.g. A modular desk organizer with pen slots and sticky note tray"
+        placeholder="E.G. A MODULAR DESK ORGANIZER WITH PEN SLOTS..."
         rows="6"
       />
     </div>
 
     <button class="primary-btn" on:click={submitPrompt} disabled={loading}>
       {#if loading}
-        <span class="spinner"></span> Generating Model...
+        <span class="spinner"></span> GENERATING...
       {:else}
-        Generate 3D Model
+        GENERATE 3D MODEL
       {/if}
     </button>
 
     {#if error}
       <div class="callout error">
-        <strong>Error:</strong> {error}
+        <strong>ERROR:</strong> {error}
       </div>
     {/if}
   </section>
@@ -94,14 +100,21 @@
     {#if loading}
       <div class="loading-state">
         <div class="loader"></div>
-        <p>Synthesizing geometry, validating code, and exporting STL...</p>
+        <p>SYNTHESIZING GEOMETRY...</p>
       </div>
     {:else if result}
       <div class="preview-section">
         {#if result.stl_url}
           <div class="viewer-wrapper">
-            <StlViewer url={`${apiBase}${result.stl_url}`} />
+            <StlViewer url={`${apiBase}${result.stl_url}`} on:dimensions={handleDimensions} />
           </div>
+          {#if modelDimensions}
+            <div class="dimensions-overlay">
+              <div class="dim-row"><span>W:</span> {modelDimensions.x.toFixed(1)}mm</div>
+              <div class="dim-row"><span>D:</span> {modelDimensions.y.toFixed(1)}mm</div>
+              <div class="dim-row"><span>H:</span> {modelDimensions.z.toFixed(1)}mm</div>
+            </div>
+          {/if}
           <div class="actions">
             <a
               class="download-btn"
@@ -110,15 +123,15 @@
               rel="noopener"
               download
             >
-              Download STL
+              DOWNLOAD STL
             </a>
             <button class="secondary-btn" on:click={toggleDetails}>
-              {showDetails ? "Hide Details" : "Show Code & Details"}
+              {showDetails ? "HIDE DETAILS" : "SHOW CODE & DETAILS"}
             </button>
           </div>
         {:else}
           <div class="no-preview">
-            <p>No STL generated. Check errors below.</p>
+            <p>NO STL GENERATED. CHECK ERRORS BELOW.</p>
           </div>
         {/if}
       </div>
@@ -127,7 +140,7 @@
         <div class="details-section">
           {#if result.errors && result.errors.length}
             <div class="callout warning">
-              <h4>Warnings & Errors</h4>
+              <h4>WARNINGS & ERRORS</h4>
               <ul>
                 {#each result.errors as item}
                   <li>{item}</li>
@@ -138,22 +151,22 @@
 
           <div class="detail-grid">
             <div class="detail-item">
-              <span class="label">Validation Status</span>
+              <span class="label">VALIDATION STATUS</span>
               <span class={`status-badge ${result.validation?.status === 'passed' ? 'success' : 'failure'}`}>
-                {result.validation?.status ?? "unknown"}
+                {result.validation?.status ?? "UNKNOWN"}
               </span>
             </div>
             <div class="detail-item">
-              <span class="label">Export Status</span>
+              <span class="label">EXPORT STATUS</span>
               <span class={`status-badge ${result.export?.status === 'success' ? 'success' : 'failure'}`}>
-                {result.export?.status ?? "unknown"}
+                {result.export?.status ?? "UNKNOWN"}
               </span>
             </div>
           </div>
 
           {#if result.snippets?.length}
             <div class="detail-block">
-              <h3>Referenced Snippets</h3>
+              <h3>REFERENCED SNIPPETS</h3>
               <ul class="snippet-list">
                 {#each result.snippets as snippet}
                   <li>{formatSnippet(snippet)}</li>
@@ -163,15 +176,15 @@
           {/if}
 
           <div class="detail-block">
-            <h3>OpenSCAD Code</h3>
-            <pre>{result.code || "<no code>"}</pre>
+            <h3>OPENSCAD CODE</h3>
+            <pre>{result.code || "<NO CODE>"}</pre>
           </div>
         </div>
       {/if}
     {:else}
       <div class="empty-state">
         <div class="placeholder-cube"></div>
-        <p>Enter a prompt to generate your 3D model.</p>
+        <p>ENTER A PROMPT TO GENERATE YOUR 3D MODEL.</p>
       </div>
     {/if}
   </section>
@@ -180,9 +193,10 @@
 <style>
   :global(body) {
     margin: 0;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: #0f172a;
-    color: #f8fafc;
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    background-color: #000000;
+    color: #ffffff;
+    letter-spacing: 0.02em;
   }
 
   .layout {
@@ -192,22 +206,20 @@
     gap: 2rem;
     padding: 2rem;
     box-sizing: border-box;
-    max-width: 1600px;
+    max-width: 1800px;
     margin: 0 auto;
   }
 
   .panel {
-    background: #1e293b;
-    border: 1px solid #334155;
-    border-radius: 16px;
+    background: #000000;
+    border: 1px solid #ffffff;
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
 
   .input-panel {
-    gap: 1.5rem;
+    gap: 2rem;
     height: fit-content;
     position: sticky;
     top: 2rem;
@@ -215,75 +227,84 @@
 
   header h1 {
     margin: 0;
-    font-size: 2rem;
-    font-weight: 700;
-    background: linear-gradient(to right, #38bdf8, #818cf8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+    line-height: 1;
   }
 
   .tagline {
     margin: 0.5rem 0 0;
-    color: #94a3b8;
-    font-size: 0.95rem;
+    color: #888888;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
   }
 
   .form-group {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
 
   label {
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #cbd5e1;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: #ffffff;
+    letter-spacing: 0.05em;
   }
 
   textarea {
     width: 100%;
-    background: #0f172a;
-    border: 1px solid #334155;
-    border-radius: 8px;
+    background: #000000;
+    border: 1px solid #333333;
     padding: 1rem;
-    color: #f8fafc;
-    font-family: inherit;
-    font-size: 1rem;
+    color: #ffffff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
     resize: vertical;
     box-sizing: border-box;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.2s;
+    text-transform: uppercase;
   }
 
   textarea:focus {
     outline: none;
-    border-color: #38bdf8;
-    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    border-color: #ffffff;
+  }
+
+  textarea::placeholder {
+    color: #444444;
   }
 
   .primary-btn {
-    background: #38bdf8;
-    color: #0f172a;
-    border: none;
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid #ffffff;
     padding: 1rem;
-    border-radius: 8px;
-    font-weight: 600;
+    font-weight: 800;
     font-size: 1rem;
     cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
+    transition: all 0.2s;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   .primary-btn:hover:not(:disabled) {
-    background: #0ea5e9;
-    transform: translateY(-1px);
+    background: #000000;
+    color: #ffffff;
   }
 
   .primary-btn:disabled {
-    background: #475569;
-    color: #94a3b8;
+    background: #333333;
+    border-color: #333333;
+    color: #666666;
     cursor: not-allowed;
   }
 
@@ -291,8 +312,6 @@
     min-height: 600px;
     padding: 0;
     overflow: hidden;
-    background: #0f172a; /* Darker background for the viewer area */
-    border: 1px solid #334155;
   }
 
   .empty-state, .loading-state {
@@ -301,24 +320,26 @@
     align-items: center;
     justify-content: center;
     height: 100%;
-    color: #64748b;
+    color: #666666;
     text-align: center;
     padding: 2rem;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    font-size: 0.8rem;
   }
 
   .placeholder-cube {
     width: 64px;
     height: 64px;
-    border: 2px dashed #334155;
+    border: 1px solid #333333;
     margin-bottom: 1rem;
-    border-radius: 8px;
   }
 
   .loader {
     width: 40px;
     height: 40px;
-    border: 3px solid #334155;
-    border-top-color: #38bdf8;
+    border: 2px solid #333333;
+    border-top-color: #ffffff;
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-bottom: 1rem;
@@ -331,13 +352,41 @@
   .preview-section {
     position: relative;
     width: 100%;
-    height: 600px; /* Fixed height for viewer */
-    background: #000;
+    height: 600px;
+    background: #000000;
+    border-bottom: 1px solid #ffffff;
   }
 
   .viewer-wrapper {
     width: 100%;
     height: 100%;
+  }
+
+  .dimensions-overlay {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    background: #000000;
+    border: 1px solid #ffffff;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    z-index: 10;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: #ffffff;
+    pointer-events: none;
+  }
+
+  .dim-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .dim-row span {
+    color: #888888;
   }
 
   .actions {
@@ -351,78 +400,80 @@
 
   .download-btn, .secondary-btn {
     padding: 0.75rem 1.25rem;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.9rem;
+    font-weight: 700;
+    font-size: 0.8rem;
     cursor: pointer;
     text-decoration: none;
     transition: all 0.2s;
-    backdrop-filter: blur(4px);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid #ffffff;
   }
 
   .download-btn {
-    background: rgba(56, 189, 248, 0.9);
-    color: #0f172a;
-    border: none;
+    background: #ffffff;
+    color: #000000;
   }
 
   .download-btn:hover {
-    background: #38bdf8;
+    background: #000000;
+    color: #ffffff;
   }
 
   .secondary-btn {
-    background: rgba(30, 41, 59, 0.8);
-    color: #f8fafc;
-    border: 1px solid #475569;
+    background: #000000;
+    color: #ffffff;
   }
 
   .secondary-btn:hover {
-    background: rgba(30, 41, 59, 1);
-    border-color: #64748b;
+    background: #ffffff;
+    color: #000000;
   }
 
   .details-section {
     padding: 2rem;
-    background: #1e293b;
-    border-top: 1px solid #334155;
+    background: #000000;
   }
 
   .detail-grid {
     display: flex;
-    gap: 2rem;
-    margin-bottom: 2rem;
+    gap: 3rem;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid #333333;
+    padding-bottom: 2rem;
   }
 
   .detail-item {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.5rem;
   }
 
   .label {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #94a3b8;
+    letter-spacing: 0.1em;
+    color: #888888;
   }
 
   .status-badge {
     display: inline-block;
     padding: 0.25rem 0.75rem;
-    border-radius: 999px;
-    font-size: 0.85rem;
+    border: 1px solid #333333;
+    font-size: 0.8rem;
     font-weight: 600;
-    text-transform: capitalize;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   .status-badge.success {
-    background: rgba(34, 197, 94, 0.2);
-    color: #4ade80;
+    border-color: #ffffff;
+    color: #ffffff;
   }
 
   .status-badge.failure {
-    background: rgba(239, 68, 68, 0.2);
-    color: #f87171;
+    border-color: #ff0000;
+    color: #ff0000;
   }
 
   .detail-block {
@@ -430,9 +481,11 @@
   }
 
   .detail-block h3 {
-    font-size: 1.1rem;
-    color: #e2e8f0;
+    font-size: 1rem;
+    color: #ffffff;
     margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   .snippet-list {
@@ -445,44 +498,42 @@
   }
 
   .snippet-list li {
-    background: #0f172a;
+    background: #000000;
     padding: 0.75rem;
-    border-radius: 6px;
-    border: 1px solid #334155;
-    font-size: 0.9rem;
-    color: #cbd5e1;
+    border: 1px solid #333333;
+    font-size: 0.8rem;
+    color: #cccccc;
+    font-family: 'JetBrains Mono', monospace;
   }
 
   pre {
-    background: #0f172a;
+    background: #000000;
     padding: 1.5rem;
-    border-radius: 8px;
-    border: 1px solid #334155;
+    border: 1px solid #333333;
     overflow-x: auto;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    color: #e2e8f0;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: #cccccc;
     margin: 0;
   }
 
   .callout {
     padding: 1rem;
-    border-radius: 8px;
+    border: 1px solid #ffffff;
     margin-top: 1rem;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
   }
 
   .callout.error {
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.2);
-    color: #fca5a5;
+    border-color: #ff0000;
+    color: #ff0000;
   }
 
   .callout.warning {
-    background: rgba(234, 179, 8, 0.1);
-    border: 1px solid rgba(234, 179, 8, 0.2);
-    color: #fde047;
+    border-color: #ffff00;
+    color: #ffff00;
     margin-bottom: 2rem;
   }
 

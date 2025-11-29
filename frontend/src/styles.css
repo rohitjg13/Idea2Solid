@@ -1,12 +1,13 @@
 body {
   margin: 0;
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background-color: #0f172a;
-  color: #f8fafc;
+  background-color: #000000;
+  color: #ffffff;
 }
 
 a {
-  color: #38bdf8;
+  color: #ffffff;
+  text-decoration: underline;
 }
 
 button {
