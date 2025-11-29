@@ -4,7 +4,11 @@ from dotenv import load_dotenv
 
 from pathlib import Path
 
-from idea2solid import SnippetVectorStore, build_generation_pipeline
+from idea2solid import (
+    SnippetVectorStore,
+    build_generation_pipeline,
+    build_run_config,
+)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SNIPPET_DIR = BASE_DIR / "data" / "snippets"
@@ -14,14 +18,18 @@ def main() -> None:
     load_dotenv()
 
     vector_store = SnippetVectorStore.from_snippet_dir(SNIPPET_DIR)
+    request = "Design a compact desk hook that adheres under a table and holds a headset."
     pipeline = build_generation_pipeline(
         vector_store,
         top_k=3,
         output_dir=BASE_DIR / "outputs",
     )
-
-    request = "Design a compact desk hook that adheres under a table and holds a headset."
-    result = pipeline.invoke({"question": request})
+    config = build_run_config(
+        run_name="generation-demo",
+        tags=["demo"],
+        metadata={"prompt": request},
+    )
+    result = pipeline.invoke({"question": request}, config=config)
 
     print("Generated OpenSCAD code:\n")
     print(result.get("code", "<no code>"))
