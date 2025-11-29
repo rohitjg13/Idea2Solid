@@ -4,3 +4,6 @@ langchain-community>=0.2.11
 langgraph>=0.2.18
 faiss-cpu>=1.8.0.post1
 python-dotenv>=1.0.0
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+aiofiles>=24.1.0
