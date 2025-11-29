@@ -91,7 +91,7 @@ def _retrieve(
     }
 
 
-def _build_prompt(question: str, context: str) -> str:
+def _build_prompt(question: str, context: str, cheatsheet: str = "") -> str:
     return (
         "You are an OpenSCAD expert helping convert natural language requests into "
         "valid OpenSCAD code. Follow these rules:\n"
@@ -101,6 +101,7 @@ def _build_prompt(question: str, context: str) -> str:
         "- Avoid importing external libraries.\n"
         "- Return only OpenSCAD code.\n"
         "\n"
+        f"OpenSCAD Cheat Sheet:\n{cheatsheet}\n\n"
         f"User request:\n{question}\n\n"
         f"Reference snippets:\n{context}\n\n"
         "OpenSCAD code:"
@@ -124,7 +125,13 @@ def _synthesize(
 ) -> GenerationState:
     context = state.get("context", "")
     question = state.get("question", "")
-    prompt = _build_prompt(question, context)
+
+    cheatsheet_path = Path(__file__).parent.parent.parent / "data" / "snippets" / "openscad_cheatsheet.txt"
+    cheatsheet = ""
+    if cheatsheet_path.exists():
+        cheatsheet = cheatsheet_path.read_text()
+
+    prompt = _build_prompt(question, context, cheatsheet)
 
     chat_cls = _lazy_import("langchain_openai", "ChatOpenAI")
     messages_module = import_module("langchain_core.messages")
