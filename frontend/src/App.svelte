@@ -10,6 +10,24 @@
   let showDetails = false;
   let modelDimensions = null;
 
+  const examples = [
+    "A parametric gear with 12 teeth and a 5mm center bore",
+    "A hexagonal storage pot with a honeycomb pattern",
+    "A wall-mounted cable clip for 5mm cables",
+    "A simple laptop stand with 15 degree angle"
+  ];
+
+  const tips = [
+    "Specify dimensions in mm (e.g., '100mm wide')",
+    "Mention geometric shapes (cube, cylinder, sphere)",
+    "Describe features like 'holes', 'rounded corners', 'chamfers'",
+    "Keep it simple for best results"
+  ];
+
+  function useExample(ex) {
+    prompt = ex;
+  }
+
   function reset() {
     error = null;
     result = null;
@@ -81,6 +99,17 @@
       />
     </div>
 
+    <div class="examples">
+      <span class="label">TRY AN EXAMPLE:</span>
+      <div class="chip-grid">
+        {#each examples as ex}
+          <button class="chip" on:click={() => useExample(ex)}>
+            {ex}
+          </button>
+        {/each}
+      </div>
+    </div>
+
     <button class="primary-btn" on:click={submitPrompt} disabled={loading}>
       {#if loading}
         <span class="spinner"></span> GENERATING...
@@ -88,6 +117,15 @@
         GENERATE 3D MODEL
       {/if}
     </button>
+
+    <div class="tips-box">
+      <h3>PROMPTING TIPS</h3>
+      <ul>
+        {#each tips as tip}
+          <li>{tip}</li>
+        {/each}
+      </ul>
+    </div>
 
     {#if error}
       <div class="callout error">
@@ -277,6 +315,56 @@
 
   textarea::placeholder {
     color: #444444;
+  }
+
+  .examples {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .chip-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .chip {
+    background: #000000;
+    border: 1px solid #333333;
+    color: #cccccc;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .chip:hover {
+    border-color: #ffffff;
+    color: #ffffff;
+  }
+
+  .tips-box {
+    border: 1px solid #333333;
+    padding: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .tips-box h3 {
+    margin: 0 0 1rem 0;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: #888888;
+  }
+
+  .tips-box ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    font-size: 0.8rem;
+    color: #cccccc;
+    line-height: 1.5;
   }
 
   .primary-btn {
