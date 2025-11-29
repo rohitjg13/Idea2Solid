@@ -27,5 +27,6 @@ I had planned to create a modern, prompt-driven 3D modeling tool that generates 
 The reason for my satisfaction is that we have successfully built a complete end-to-end pipeline. On the backend, I integrated a specialized OpenSCAD cheat sheet into the LangGraph pipeline to ensure high-quality code generation. On the frontend, I implemented a UI using Svelte and Three.js, featuring real-time 3D rendering, automatic dimension calculation, and a responsive layout.
 
 # Demo
-![demo-1](https://github.com/user-attachments/assets/19c6d46b-008b-4ede-ae21-835d870c1d51)
+![demo-1](https://github.com/user-attachments/assets/aa010e32-0a1d-4094-bbe0-bd943d703467)
+
 ![demo-2](https://github.com/user-attachments/assets/f8a5ea81-5d4f-4a69-8ef4-17aa9237b328)
