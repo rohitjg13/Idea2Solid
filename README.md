@@ -18,3 +18,4 @@ I plan to execute these steps to complete my project.
 - [X] Automate STL generation by invoking OpenSCAD headlessly and returning file handles through the graph.
 - [X] Instrument the graph with LangSmith traces and add regression prompts to validate geometry consistency.
 - [X] Package the solution with a frontend (FastAPI + Svelte) for interactive use.
+- [X] Added a STL Viewer to the frontend
