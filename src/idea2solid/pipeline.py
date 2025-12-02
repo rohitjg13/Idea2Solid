@@ -100,6 +100,8 @@ def _build_prompt(question: str, context: str, cheatsheet: str = "") -> str:
         "- Keep tunable parameters at the top with sensible defaults.\n"
         "- Avoid importing external libraries.\n"
         "- Return only OpenSCAD code.\n"
+        "- CRITICAL: You must strictly adhere to any dimensions provided in the user request. If the user asks for a 50mm width, the model must be exactly 50mm wide.\n"
+
         "\n"
         f"OpenSCAD Cheat Sheet:\n{cheatsheet}\n\n"
         f"User request:\n{question}\n\n"

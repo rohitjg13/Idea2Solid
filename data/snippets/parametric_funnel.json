@@ -1,0 +1,14 @@
+{
+  "id": "parametric_funnel",
+  "title": "Parametric Funnel",
+  "summary": "A customizable funnel with a conical top and straight spout.",
+  "parameters": {
+    "top_diameter": "Outer diameter of the wide top opening",
+    "spout_diameter": "Outer diameter of the narrow spout",
+    "top_height": "Height of the conical section",
+    "spout_height": "Height of the straight spout section",
+    "wall_thickness": "Thickness of the funnel walls"
+  },
+  "tags": ["tool", "kitchen", "garage", "cylinder", "hollow"],
+  "notes": "Uses difference() to hollow out the shape. Ensure wall_thickness is less than spout_diameter/2."
+}

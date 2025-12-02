@@ -1,0 +1,15 @@
+{
+  "id": "vented_enclosure",
+  "title": "Vented Electronics Enclosure",
+  "summary": "A rectangular box with ventilation slots and internal mounting posts.",
+  "parameters": {
+    "width": "External width of the box",
+    "depth": "External depth of the box",
+    "height": "External height of the box",
+    "wall_thickness": "Thickness of the walls",
+    "vent_width": "Width of each ventilation slot",
+    "vent_spacing": "Distance between ventilation slots"
+  },
+  "tags": ["box", "electronics", "case", "enclosure", "ventilation"],
+  "notes": "Demonstrates using loops for repeating patterns (vents) and positioning internal features (standoffs)."
+}

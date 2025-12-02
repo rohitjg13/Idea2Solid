@@ -1,6 +1,5 @@
 *.env
 __pycache__/
-*.pyc
 .vscode/
 .idea/
 .DS_Store
@@ -8,3 +7,4 @@ src/idea2solid/__pycache__/__init__.cpython-313.pyc
 outputs/idea2solid_1d6afa1be28d4df68103481c34487524.stl
 src/idea2solid/__pycache__/__init__.cpython-313.pyc
 outputs/
+MAT496 Submission.mp4
